@@ -1,0 +1,143 @@
+{
+  "name": "TelBot-1.0-n8n",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "mode": "webhook",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -144,
+        16
+      ],
+      "id": "9a3d01f0-b39f-4955-abf5-21acb7866b48",
+      "name": "When chat message received",
+      "webhookId": "3aa9d728-74df-48b2-a7ff-0a66dac534b5"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}\n\nKamu adalah helpdesk rekrutmen Telkom bernama TelBot.\n\nATURAN WAJIB — HARUS DIIKUTI TANPA PENGECUALIAN:\n1. Jika tool FAQ mengembalikan jawaban, kirimkan jawaban tersebut PERSIS APA ADANYA tanpa mengubah satu kata pun.\n2. DILARANG KERAS menambahkan apapun: tidak boleh ada penjelasan tambahan, template, contoh, heading, bullet point, atau tanda markdown seperti **, ##, ```, --, >, |.\n3. DILARANG membuat konten baru atau mengembangkan jawaban dari tool.\n4. Tugasmu HANYA meneruskan jawaban dari tool ke pengguna, tidak lebih.\n5. Jika tool mengatakan found: false, sampaikan hanya pesan dari field \"answer\" di tool tersebut.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        128,
+        16
+      ],
+      "id": "52a71434-db82-45f0-afaa-6ff5ccedd5b7",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        240,
+        304
+      ],
+      "id": "61234a5e-ed36-4785-97ec-79824a50e357",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {
+        "description": "Cari jawaban dari database FAQ Telkom berdasarkan pertanyaan user. Input: pertanyaan user sebagai string.",
+        "jsCode": "// ---------- DATABASE FAQ ----------\nconst FAQ_DATABASE = [\n  { \n    \"question\": \"BAGAIMANA MEKANISME REQUEST GANTI EMAIL KARENA EMAIL LAMA TIDAK AKTIF?\", \n    \"answer\": \"Semangat pagi!\\n\\nTerima kasih telah menghubungi helpdesk Rekrutmen Support Telkom.\\n\\nTerkait kendala yang terjadi, silakan untuk menginformasikan form berikut ini: \\n1. Nama Lengkap :\\n2. Nomor KTP :\\n3. Email Lama :\\n4. Email Baru :\\n5. Melampirkan KTP.\\n\\nSalam,\\n\\nTim Rekrut TELKOM\" \n  },\n  { \n    \"question\": \"BERAPA LAMA JADWAL DURASI ONLINE TEST?\", \n    \"answer\": \"Semangat pagi!\\n\\nTerima kasih telah menghubungi helpdesk Rekrutmen Support Telkom.\\n\\n\\nPelaksanaan Online Test sesuai dengan jadwal yang telah kami informasikan via email dan website rekrut Telkom.\\nPeserta hanya dapat mengakses tes sesuai waktu yang tertera pada jadwal tersebut.\\nWaktu akses tes mengacu pada Waktu Indonesia Barat.  Bila Saudara berada di luar wilayah WIB agar dapat menyesuaikan.\\n\\nSalam,\\nTim Rekrut TELKOM\" \n  },\n  { \n    \"question\": \"BAGAIMANA APABILA SAYA INGIN RESCHEDULE JADWAL ONLINE TEST?\", \n    \"answer\": \"Semangat pagi!\\n\\nTerima kasih telah menghubungi helpdesk Rekrutmen Support Telkom.\\nPelaksanaan Online Test sesuai dengan jadwal yang telah kami informasikan via email dan website rekrut Telkom.\\nKami tidak mengakomodir untuk perubahan jadwal dengan alasan apapun.\\n\\n\\nTerima kasih atas pengertiannya.\\n\\nSalam,\\nTim Rekrut TELKOM\" \n  },\n  { \n    \"question\": \"BAGAIMANA MELAKUKAN ENTRY PERSONAL DATA PENDIDIKAN YANG TERAKHIR ATAU YANG SAAT APPLY?\", \n    \"answer\": \"Semangat pagi!\\n\\nTerima kasih telah menghubungi helpdesk Rekrutmen Support Telkom.\\n\\nTerkait dengan personal data pada Pendidikan, silakan untuk mengisi Pendidikan di website rekrut Telkom sesuai saat apply di website FHCI. \\nTerima kasih.\\n\\nSalam,\\nTim Rekrut TELKOM\" \n  },\n  { \n    \"question\": \"DIMANA LOKASI PELAKSANAAN TES ASSESSMENT DAYS OFFLINE?\", \n    \"answer\": \"Semangat pagi!\\n\\nTerima kasih telah menghubungi helpdesk Rekrutmen Support Telkom.\\n\\nTerkait dengan Tahap seleksi selanjutnya yaitu assessment days  akan diinformasikan lebih lanjut untuk detail pelaksanaan melalui email dan website rekrut Telkom apabila peserta dinyatakan \\\"LULUS\\\".\\nMohon selalu periksa email secara berkala.\\n\\nTerima kasih.\\n\\nSalam,\\nTim Rekrut TELKOM\" \n  },\n  { \n    \"question\": \"BAGAIMANA CARA MELAKUKAN UPDATE PERSONAL DATA & UBAH DATA DIRI?\", \n    \"answer\": \"Semangat pagi!\\n\\nTerima kasih telah menghubungi helpdesk Rekrutmen Support Telkom.\\n\\nTerkait dengan Personal data, mohon maaf Saudara tidak diperkenankan untuk melakukan edit/ubah data setelah submit/apply pada website rekrut Telkom.\\nTerima kasih.\\n\\nSalam,\\n\\nTim Rekrut TELKOM\" \n  },\n  { \n    \"question\": \"BAGAIMANA KETIKA SAYA TIDAK BISA UBAH/EDIT DATA KARENA PERNAH APPLY DI BATCH SEBELUMNYA?\", \n    \"answer\": \"Semangat pagi!\\n\\nTerima kasih telah menghubungi helpdesk Rekrutmen Support Telkom.\\n\\nTerkait kendala yang terjadi, silakan untuk menginformasikan form berikut ini: \\n1. Nama Lengkap :\\n2. Nomor KTP :\\n3. Email :\\n4. Kendala :\\nTerima kasih.\\n\\nSalam,\\nTim Rekrut TELKOM\" \n  },\n  { \n    \"question\": \"SAYA TIDAK BISA LOGIN, BAGAIMANA SOLUSINYA?\", \n    \"answer\": \"Semangat pagi!\\n\\nTerima kasih telah menghubungi helpdesk Rekrutmen Support Telkom.\\n\\nApabila Saudara tidak bisa login, mohon untuk memastikan jaringan stabil dan memastikan username dan password sudah benar (sesuai yang kami informasikan melalui email).\\nTerima kasih.\\n\\nSalam,\\nTim Rekrut TELKOM\" \n  },\n  { \n    \"question\": \"APAKAH KAMERA MEMPENGARUHI NILAI TES?\", \n    \"answer\": \"Semangat pagi!\\nTerima kasih telah menghubungi helpdesk Rekrutmen Support Telkom.\\n\\nPada online test, nilai dipengaruhi oleh hasil test Wawasan Kebangsaan, Tes Bidang, Digital Mindset & Behaviour Test, Persona Inventory Test.\\nTerimakasih.\\n\\nSalam,\\nTim Rekrut TELKOM\" \n  },\n  { \n    \"question\": \"BAGAIMANA APABILA SEB FAILED?\", \n    \"answer\": \"Semangat pagi!   \\n   \\nTerima kasih telah menghubungi helpdesk Rekrutmen Support Telkom.   \\n    \\nSilakan dipastikan kembali bahwa Saudara telah melakukan download konfigurasi SEBnya.\\nTerima kasih.\\n\\nSalam,   \\nTim Rekrut TELKOM\" \n  },\n  { \n    \"question\": \"PASSWORD SEB APA?\", \n    \"answer\": \"Semangat pagi!   \\n   \\nTerima kasih telah menghubungi helpdesk Rekrutmen Support Telkom.   \\n    \\nSilakan dapat mengetik \\\"examstart\\\" untuk memulai exam dan setelah menyelesaikannya  Saudara dapat mengetik \\\"examquit\\\".\\nTerima kasih.\\n\\nSalam,   \\nTim Rekrut TELKOM\" \n  },\n  { \n    \"question\": \"BAGAIMANA APABILA DOKUMEN DI LUAR DOMISILI YANG TERDAFTAR?\", \n    \"answer\": \"Semangat pagi!\\nTerima kasih telah menghubungi helpdesk Rekrutmen Support Telkom.\\n\\nUntuk kelengkapan berkas menggunakan dokumen ASLI dan jika dokumen asli berada di luar kota, maka dapat dilakukan dengan meminta bantuan kerabat / saudara / teman untuk join pada Link zoom yang akan di informasikan saat jadwal interview.\\nTerima kasih\\n\\nSalam,\\nTim Rekrut TELKOM\" \n  },\n  { \n    \"question\": \"KAPAN EMAIL PEMBERITAHUAN KELULUSAN ONLINE TEST?\", \n    \"answer\": \"Semangat pagi!\\nTerima kasih telah menghubungi helpdesk Rekrutmen Support Telkom.\\n\\nInformasi kelulusan tahapan online test TKB RBB 2023 dan jadwal assessment days telah kami sampaikan via email, mohon untuk memeriksa kembali email dan juga website rekrut Telkom.\\nTerima kasih\\n\\nSalam,\\nTim Rekrut TELKOM\" \n  },\n  { \n    \"question\": \"APAKAH SAYA BISA MENGAJUKAN RESCHEDULE JADWAL ASSESSMENT DAYS?\", \n    \"answer\": \"Semangat pagi!\\nTerima kasih telah menghubungi helpdesk Rekrutmen Support Telkom.\\n\\nPelaksanaan Assessment Days TKB RBB 2023 sesuai dengan jadwal yang telah kami informasikan via email dan website rekrut Telkom.\\nKami tidak mengakomodir untuk perubahan jadwal dengan alasan apapun.\\nTerima kasih atas pengertiannya.\\n\\nSalam,\\nTim Rekrut TELKOM\" \n  },\n  { \n    \"question\": \"BELUM MUNCUL TOMBOL ATAU TIDAK BISA EDIT FULL CV, BAGAIMANA SOLUSINYA?\", \n    \"answer\": \"Semangat pagi!\\nTerima kasih telah menghubungi helpdesk Rekrutmen Support Telkom.\\n\\nMohon untuk melakukan refresh website rekrut Telkom dan kemudian login kembali.\\nTerima kasih.\\n\\nSalam,\\nTim Rekrut TELKOM\" \n  },\n  { \n    \"question\": \"BAGAIMANA APABILA DOKUMEN ASLI UNTUK CEK BERKASNYA DALAM BENTUK DIGITAL?\", \n    \"answer\": \"Semangat pagi!\\n\\nTerima kasih telah menghubungi helpdesk Rekrutmen Support Telkom.\\n\\nPada sesi cek berkas, kami sarankan untuk menyiapkan dokumen fisik ASLI sesuai pada informasi yang telah kami sampaikan via email dan website rekrut Telkom.\\nTerima kasih\\n\\nSalam,\\nTim Rekrut TELKOM\" \n  },\n  { \n    \"question\": \"BAGAIMANA APABILA SOAL TEST ESSAI BIDANG TIDAK MUNCUL?\", \n    \"answer\": \"Semangat pagi!\\n\\nTerima kasih telah menghubungi helpdesk Rekrutmen Support Telkom.\\n \\nMohon untuk refresh website rekrut Telkom dan kemudian login kembali.\\nTerima kasih.\\n \\nSalam,\\nTim Rekrut TELKOM\" \n  },\n  { \n    \"question\": \"MOHON SOLUSINYA EMAIL TRIAL PSIKOTES BELUM SAYA TERIMA\", \n    \"answer\": \"Semangat pagi! \\n \\nTerima kasih telah menghubungi helpdesk Rekrutmen Support Telkom. \\n  \\nMohon untuk refresh kembali email Saudara, kemudian login kembali. \\nDapat dicek untuk ;\\nNama Pengirim : Admin E- Psikotes \\nSubject email : Pemberitahuan Pemeriksaan Psikologi Online\\nTerima kasih. \\n  \\nSalam, \\nTim Rekrut TELKOM \" \n  },\n  { \n    \"question\": \"BOLEH SAYA MEMINTA KEMBALI FILE SURAT PERNYATAAN\", \n    \"answer\": \"Semangat pagi! \\n \\nTerima kasih telah menghubungi helpdesk Rekrutmen Support Telkom. \\n  \\nBerikut terlampir file pengisian SURAT PERNYATAAN.\\nTerima kasih. \\n  \\nSalam, \\nTim Rekrut TELKOM\" \n  },\n  { \n    \"question\": \"BAGAIMANA APABILA SAYA BELUM MENGERJAKAN ESSAY?\", \n    \"answer\": \"Semangat pagi!  \\n  \\nTerima kasih telah menghubungi helpdesk Rekrutmen Support Telkom.  \\n   \\nSilakan untuk dapat mengikuti tahapan Assessment Days sesuai dengan jadwal yang sudah diberikan.\\nTerima kasih.  \\n   \\nSalam,  \\nTim Rekrut TELKOM \" \n  },\n  { \n    \"question\": \"MOHON INFONYA PERIHAL JADWAL PSIKOTEST DAN ASSESSMENT DAY\", \n    \"answer\": \"Semangat pagi!  \\n  \\nTerima kasih telah menghubungi helpdesk Rekrutmen Support Telkom.  \\n   \\nSilakan Saudara dapat join dari pukul 07.45 WIB (15 menit sebelum dimulainya kegiatan). Detail mekanisme Assessment akan dijelaskan ketika Assessment Days.\\nTerima kasih.  \\n   \\nSalam,  \\nTim Rekrut TELKOM \" \n  }\n];\n\n// ---------- FUNGSI SIMILARITY ----------\nfunction normalize(text) {\n  return text.toUpperCase().replace(/[^A-Z0-9\\s]/g, ' ').replace(/\\s+/g, ' ').trim();\n}\n\nfunction getWords(text) {\n  const stopwords = new Set(['APA','DAN','DI','KE','DARI','YANG','INI','ITU','ATAU','DENGAN','UNTUK','SAYA','KAMI','KAMU','TIDAK','BISA','APABILA','BAGAIMANA','KAPAN','DIMANA','BERAPA']);\n  return new Set(normalize(text).split(' ').filter(w => w.length > 2 && !stopwords.has(w)));\n}\n\nfunction jaccardSimilarity(textA, textB) {\n  const setA = getWords(textA);\n  const setB = getWords(textB);\n  if (setA.size === 0 || setB.size === 0) return 0;\n  const intersection = new Set([...setA].filter(w => setB.has(w)));\n  const union = new Set([...setA, ...setB]);\n  return intersection.size / union.size;\n}\n\n// ---------- BACA INPUT DARI n8n ----------\nlet userQuery = '';\n\ntry {\n  if (typeof query !== 'undefined' && query) {\n    userQuery = String(query);\n  }\n} catch(e) {}\n\nif (!userQuery) {\n  try {\n    const inp = $input.first().json;\n    userQuery = inp.query || inp.input || inp.chatInput || inp.text || inp.message || '';\n    if (!userQuery && typeof inp === 'string') userQuery = inp;\n    if (!userQuery) {\n      const vals = Object.values(inp);\n      if (vals.length > 0 && typeof vals[0] === 'string') userQuery = vals[0];\n    }\n  } catch(e) {}\n}\n\nif (!userQuery || userQuery.trim() === '') {\n  return JSON.stringify({ \n    found: false, \n    answer: \"Mohon maaf, pertanyaan tidak dapat diproses. Silakan coba lagi.\" \n  });\n}\n\n// ---------- MATCHING PROSES ----------\nconst THRESHOLD = 0.10;\nlet bestMatch = null;\nlet bestScore = 0;\n\nfor (const faq of FAQ_DATABASE) {\n  const score = jaccardSimilarity(userQuery, faq.question);\n  if (score > bestScore) {\n    bestScore = score;\n    bestMatch = faq;\n  }\n}\n\n// ---------- KEMBALIKAN HASIL ----------\nif (bestScore >= THRESHOLD && bestMatch) {\n  return JSON.stringify({\n    found: true,\n    answer: bestMatch.answer\n  });\n} else {\n  return JSON.stringify({\n    found: false,\n    answer: \"Mohon maaf, informasi yang Anda tanyakan belum tersedia di database kami. Silakan hubungi helpdesk Telkom secara langsung untuk bantuan lebih lanjut.\\n\\nSalam,\\nTim Rekrut TELKOM\"\n  });\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "typeVersion": 1.3,
+      "position": [
+        384,
+        272
+      ],
+      "id": "7eb1fe57-9aea-4dbc-8c4b-10b2e7fa02ee",
+      "name": "Code Tool1"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        32,
+        272
+      ],
+      "id": "832cbaf8-dcd9-45d0-8718-136fa7e57ed0",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "6sSU7exaEGUxZ6x3",
+          "name": "Groq account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code Tool1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "550dda07-1026-4ead-9dfd-a3bf7e260660",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "be26231d46db34a598bcbce0b13bb09be2ad74c67a24fe08ca0cef70d82b8be0"
+  },
+  "id": "Txd5UqIMEulTB19p",
+  "tags": []
+}

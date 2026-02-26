@@ -1,0 +1,406 @@
+/* --- CSS Variables & Global Reset --- */
+:root {
+    --primary-color: #ED1C24; /* Merah Telkom */
+    --primary-dark: #c4161c;
+    --secondary-color: #2d3436; /* Warna teks gelap */
+    --bg-light: #ffffff;
+    --bg-off-white: #f9fbfc;
+    --text-grey: #636e72;
+    --shadow-sm: 0 2px 10px rgba(0,0,0,0.05);
+    --shadow-md: 0 10px 30px rgba(237, 28, 36, 0.15);
+    --transition: all 0.3s ease;
+    --nav-height: 80px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-off-white);
+    color: var(--secondary-color);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Utility Classes */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --- Navbar Styling (Fluid & Sticky) --- */
+.navbar {
+    height: var(--nav-height);
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px); /* Efek blur di belakang navbar */
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.navbar.scrolled {
+    height: 70px; /* Sedikit mengecil saat di-scroll */
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+}
+
+.nav-brand .logo-text {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--secondary-color);
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 40px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--secondary-color);
+    font-weight: 500;
+    font-size: 15px;
+    position: relative;
+    transition: var(--transition);
+}
+
+/* Efek garis bawah saat hover pada menu */
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 3px;
+    bottom: -5px;
+    left: 0;
+    background-color: var(--primary-color);
+    transition: var(--transition);
+    border-radius: 2px;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    color: var(--primary-color);
+}
+
+.nav-links a:hover::after, .nav-links a.active::after {
+    width: 100%;
+}
+
+/* Hamburger Menu (Hidden on Desktop) */
+.hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.hamburger span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: var(--secondary-color);
+    margin: 5px 0;
+    transition: var(--transition);
+    border-radius: 3px;
+}
+
+/* --- Hero Section Styling (Indah & Modern) --- */
+.hero {
+    padding-top: var(--nav-height);
+    min-height: 100vh; /* Menggunakan min-height agar fleksibel */
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    /* Background Gradient Halus */
+    background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+}
+
+/* Pola Latar Belakang Teknologi */
+.hero::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-image: radial-gradient(var(--text-grey) 1px, transparent 1px);
+    background-size: 30px 30px;
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+.hero-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Membagi layar jadi 2 kolom */
+    align-items: center;
+    gap: 50px;
+    padding: 50px 0;
+}
+
+/* Kolom Kiri: Konten Teks */
+.hero-content {
+    z-index: 2;
+}
+
+.hero-badge {
+    display: inline-block;
+    background-color: rgba(237, 28, 36, 0.1);
+    color: var(--primary-color);
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.hero-content h1 {
+    font-size: 3.5rem;
+    line-height: 1.2;
+    margin-bottom: 25px;
+    color: var(--secondary-color);
+}
+
+.text-highlight {
+    color: var(--primary-color);
+    position: relative;
+    z-index: 1;
+}
+
+/* Efek garis bawah tebal di belakang teks highlight */
+.text-highlight::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    width: 100%;
+    height: 15px;
+    background-color: rgba(237, 28, 36, 0.15);
+    z-index: -1;
+    transform: skewX(-15deg);
+}
+
+.hero-content p {
+    font-size: 1.125rem;
+    color: var(--text-grey);
+    margin-bottom: 40px;
+    max-width: 500px;
+}
+
+/* Buttons Styling */
+.hero-buttons {
+    display: flex;
+    gap: 20px;
+}
+
+.btn {
+    padding: 15px 35px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: var(--transition);
+    border: none;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(237, 28, 36, 0.25);
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 2px solid var(--secondary-color);
+    color: var(--secondary-color);
+}
+
+.btn-outline:hover {
+    background-color: var(--secondary-color);
+    color: white;
+    transform: translateY(-3px);
+}
+
+/* Kolom Kanan: Visual & Bentuk Abstrak */
+.hero-visual {
+    position: relative;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+/* Membuat bentuk abstrak menggunakan CSS */
+.abstract-shape {
+    position: absolute;
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    background: linear-gradient(45deg, var(--primary-color), #ff6b6b);
+    opacity: 0.8;
+    animation: morphing 10s ease-in-out infinite;
+}
+
+.shape-1 {
+    width: 400px;
+    height: 400px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    filter: blur(50px); /* Efek blur untuk kesan 'glow' */
+    opacity: 0.3;
+}
+
+.shape-2 {
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(45deg, #ff9f43, var(--primary-color));
+    top: 40%;
+    left: 60%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%;
+    animation-direction: reverse;
+    animation-duration: 15s;
+    opacity: 0.2;
+}
+
+/* Animasi Bentuk Abstrak */
+@keyframes morphing {
+    0% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+    25% { border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%; }
+    50% { border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%; }
+    75% { border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%; }
+    100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+}
+
+/* --- Animations (Fade Up) --- */
+.fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUpAnim 0.8s forwards ease-out;
+}
+
+.delay-200 { animation-delay: 0.2s; }
+
+@keyframes fadeUpAnim {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Responsive Design (Membuatnya Fluid di HP) --- */
+@media screen and (max-width: 968px) {
+    .nav-links {
+        gap: 25px;
+    }
+    .hero-content h1 {
+        font-size: 2.8rem;
+    }
+    .hero-visual {
+        height: 400px;
+    }
+    .shape-1 { width: 300px; height: 300px; }
+}
+
+@media screen and (max-width: 768px) {
+    /* Navbar Mobile View */
+    .hamburger {
+        display: block; /* Tampilkan tombol hamburger */
+        z-index: 1001;
+    }
+
+    /* Ubah menu menjadi layar penuh saat di HP */
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%; /* Sembunyikan di kanan layar */
+        height: 100vh;
+        width: 100%;
+        background-color: white;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: var(--transition);
+        z-index: 1000;
+    }
+
+    /* Class yang ditambahkan via JS saat menu dibuka */
+    .nav-links.nav-active {
+        right: 0;
+    }
+
+    .nav-links li {
+        margin: 20px 0;
+        opacity: 0; /* Awalnya hidden untuk animasi */
+    }
+
+    .nav-links a {
+        font-size: 20px;
+    }
+
+    /* Animasi Hamburger menjadi 'X' */
+    .hamburger.toggle .span:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
+    .hamburger.toggle .span:nth-child(2) { opacity: 0; }
+    .hamburger.toggle .span:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
+
+    /* Hero Section Mobile View */
+    .hero {
+        padding-top: 120px;
+        min-height: auto;
+        padding-bottom: 60px;
+        text-align: center;
+    }
+
+    .hero-container {
+        grid-template-columns: 1fr; /* Tumpuk menjadi 1 kolom */
+        gap: 40px;
+    }
+
+    .hero-content p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .hero-buttons {
+        justify-content: center;
+        flex-direction: column; /* Tombol vertikal di HP kecil */
+    }
+    
+    .hero-buttons .btn {
+        width: 100%;
+    }
+
+    .hero-visual {
+        height: 300px;
+        order: -1; /* Pindahkan visual ke atas teks pada HP (opsional) */
+    }
+}
+
+/* Animasi item menu mobile masuk */
+@keyframes navLinkFade {
+    from { opacity: 0; transform: translateX(50px); }
+    to { opacity: 1; transform: translateX(0); }
+}
